@@ -8,5 +8,6 @@
 # include <cmath>
 # include <vector>
 using std::vector;
+#define NUM_RAYS 40
 
 #endif

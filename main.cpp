@@ -34,8 +34,6 @@ GLFWwindow    *init()
     return (window);
 }
 
-#define NUM_RAYS 30
-
 Ray    *initRays()
 {
     Ray         *rays = new Ray[NUM_RAYS];

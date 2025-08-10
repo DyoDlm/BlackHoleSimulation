@@ -82,26 +82,26 @@ struct Ray
     {
         if (absorbed)
             return ;
-        double  distance = getDistance(x, y, center);
+    //    double  distance = getDistance(x, y, center);
 
         dr += d2r * delta;
         dphi += d2phi * delta;
         r += dr * delta;
         phi += dphi * delta;
 
-        if (distance <= r_s) {
-            absorbed = true;
-            return;
-        }
-
+    //    if (distance <= r_s) {
+    //        absorbed = true;
+    //        return;
+    //    }
+//
      //   x += dir.x;
      //   y += dir.y;
-        x += cos(phi) + r;
-        y += sin(phi) + r;
+        x = cos(phi) + r;
+        y = sin(phi) + r;
         path.emplace_back(x, y);
     }
 
-    void draw() const
+    void zdraw() const
     {
         if (path.empty())
             return;
