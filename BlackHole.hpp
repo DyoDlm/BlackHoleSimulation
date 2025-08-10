@@ -43,6 +43,8 @@ struct BlackHole {
 
 struct Ray
 {
+    bool absorbed = false;
+
     //  cartesian
     double  x;
     double  y;
@@ -50,6 +52,10 @@ struct Ray
     //  polar coor
     double  r;
     double  phi;
+    double  dr;
+    double  dphi;
+    double  d2r;
+    double  d2phi;
     glm::vec2 dir;
     std::vector<glm::vec2> path; // historique des positions
 
@@ -61,29 +67,37 @@ struct Ray
         //path.push_back(pos);
         r = hypot(x, y);
         phi = atan2(y, x);
+        dr = c * cos(phi) + dir.y * sin(phi); // m/s
+        dphi = (-c * sin(phi) + dir.y * cos(phi)) / r;
+        d2r = 0.0;
+        d2phi = 0.0;
     }
-
-    bool absorbed = false;
 
     double  getDistance(double x, double y, glm::vec2 c)
     {
         return (sqrt((x - c.x)*(x - c.x) + (y - c.y)*(y - c.y)) / scale);
     }
 
-    void step(const glm::vec2& center, double r_s)
+    void step(const glm::vec2& center, double r_s, float delta = 0.1)
     {
         if (absorbed)
             return ;
         double  distance = getDistance(x, y, center);
-        std::cout << "distance 1" << distance
-            << "\nr_s = " << r_s << std::endl;
+
+        dr += d2r * delta;
+        dphi += d2phi * delta;
+        r += dr * delta;
+        phi += dphi * delta;
+
         if (distance <= r_s) {
             absorbed = true;
             return;
         }
 
-        x += dir.x;
-        y += dir.y;
+     //   x += dir.x;
+     //   y += dir.y;
+        x += cos(phi) + r;
+        y += sin(phi) + r;
         path.emplace_back(x, y);
     }
 
@@ -98,5 +112,16 @@ struct Ray
         glEnd();
     }
 };
+
+void    geodesic(Ray ray, double r_s)
+{
+    double r = ray.r;
+    double phi = ray.phi;
+    double dr = ray.dr;
+    double dphi = ray.dphi;
+
+    dr += r * dphi * dphi - (c*c*r_s) / (2.0 * r*r);
+    dphi = -2.0 * dr * dphi / r;
+}
 
 #endif

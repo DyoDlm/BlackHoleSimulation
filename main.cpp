@@ -67,6 +67,7 @@ int main() {
 
         for (int i = 0; i < NUM_RAYS; i++)
         {
+            geodesic(rays[i], hole.r_s);
             rays[i].draw();
             rays[i].step(hole.position, hole.r_s);
         }
