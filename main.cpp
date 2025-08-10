@@ -1,9 +1,6 @@
 #include "Dev.hpp"
 #include "BlackHole.hpp"
 
-#define WI 800
-#define HI 600
-
 GLFWwindow    *init()
 {
     if (!glfwInit()) {
@@ -57,20 +54,21 @@ int main() {
     if (window == nullptr)
         return (-1);
     // Créer un trou noir centré
-    BlackHole black(glm::vec2(400.0f, 300.0f), 1e13);
+    BlackHole   hole(glm::vec2(400.0f, 300.0f), 1e13);
     Ray         *rays = initRays();
 
-    while (!glfwWindowShouldClose(window)) {
+    while (!glfwWindowShouldClose(window))
+    {
         glClearColor(0, 0, 0, 1);
         glClear(GL_COLOR_BUFFER_BIT);
         glLoadIdentity();
 
-        black.draw();
+        hole.draw();
 
         for (int i = 0; i < NUM_RAYS; i++)
         {
             rays[i].draw();
-            rays[i].step();
+            rays[i].step(hole.position, hole.r_s);
         }
 
         glfwSwapBuffers(window);
